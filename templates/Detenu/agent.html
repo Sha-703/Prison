@@ -1,0 +1,80 @@
+{% extends 'Detenu/base.html' %}
+<html lang="fr">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGENTS</title>
+</head>
+
+{% block content %}
+
+<body>
+    <link rel="stylesheet" href="{% static 'css/stylePrison.css'%}">
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-md-4">
+            <h4 class="text-center alert alert alert-warning text-dark opacity-70">AJOUTER UN AGENT</h4>
+            <form action="{% url 'ajout_agent' %}" method="POST" class="row text-uppercase mx-auto text-light">
+                {% csrf_token %}
+                <div>{{ agent.nom_Agent.label }}</div>
+                <div>{{ agent.nom_Agent }}</div>
+    
+                <div>{{ agent.postnom_Agent.label }}</div>
+                <div>{{ agent.postnom_Agent }}</div>
+    
+                <div>{{ agent.prenom_Agent.label }}</div>
+                <div>{{ agent.prenom_Agent }}</div>
+    
+                <div>{{ agent.localite.label }}</div>
+                <div>{{ agent.localite }}</div>
+    
+                <div>{{ agent.instance.label }}</div>
+                <div>{{ agent.instance }}</div>
+    
+                <div>{{ agent.grade.label }}</div>
+                <div>{{ agent.grade }}</div>
+                <input type="submit" class="btn btn-warning mt-3" value="AJOUTER">
+            </form>
+        </div>
+    
+        <div class="col-md-8">
+            <h4 class="text-center alert alert alert-warning text-dark opacity-70">LISTE DES AGENTS ENREGISTRES</h4>
+            {% if LAG %}
+            <table class="mx-auto table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">IDENTIFIANT</th>
+                        <th scope="col">NOM AGENT</th>
+                        <th scope="col">POSTNOM AGENT</th>
+                        <th scope="col">PRENOM AGENT</th>
+                        <th scope="col">LOCALITE</Label></th>
+                        <th scope="col">INSTANCE</th>
+                        <th scope="col">GRADE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for Agent in LAG %}
+                    <tr>
+                        <th scope="row">{{ Agent.id }}</th>
+                        <th scope="row">{{ Agent.nom_Agent }}</th>
+                        <th scope="row">{{ Agent.postnom_Agent }}</th>
+                        <th scope="row">{{ Agent.prenom_Agent }}</th>
+                        <th scope="row">{{ Agent.localite }}</th>
+                        <th scope="row">{{ Agent.instance }}</th>
+                        <th scope="row">{{ Agent.grade }}</th>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <h4 class="text-center alert alert alert-warning text-dark opacity-70">PAS D'ENREGISTRMENT</h4>
+            {% endif %}
+        </div>
+    </div>
+</div>
+</body><hr>
+
+{% endblock content %}
+
+</html>

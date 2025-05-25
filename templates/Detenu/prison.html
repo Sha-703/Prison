@@ -1,0 +1,94 @@
+{% extends 'Detenu/base.html' %}
+<html lang="fr">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRISON</title>
+</head>
+
+{% block content %}
+
+<body>
+   <section>
+<link rel="stylesheet" href="{% static 'css/stylePrison.css'%}">
+
+<div class="container">
+    <div class="col mx-auto"> 
+        <div class="row">
+            <div class="row align-items-center">
+                <!-- <a class="col btn btn-success bg-primary m-3" href="{% url 'Ajout_Grade'%}">AJOUTER UN GRADE</a> -->
+                <a class="col btn btn-success bg-primary m-3" href="{% url 'ajout_agent'%}">AJOUTER AGENT</a>
+                <form action="{% url 'cherchePrison' %}" class="col form-inline" method="get">
+                    <div class="input-group">
+                        <input type="search" method="get" class="form-control rounded" placeholder="Search" aria-label="Search" name="query" aria-describedby="search-addon" />
+                        <button type="submit" class="btn btn-outline-primary" data-mdb-ripple-init>search</button>
+                    </div>
+                    {% if search_error_message %}
+                        <div class="alert alert-danger">{{ search_error_message }}</div>
+                    {% endif %}
+                </form>
+           
+            </div>
+            <div class="row-md-4 mx-auto" style="width: 35rem;">
+                <h4 class="text-center alert alert alert-warning text-dark opacity-70">AJOUTER UNE PRISON</h4>
+                    <form action="" method="POST" class=" row text-uppercase  mx-auto text-light " >
+                        {% csrf_token %}
+                        {% if error_message %}
+                            <div class="alert alert-danger">{{ error_message }}</div>
+                        {% endif %}
+                        <div class="col">
+                            <div>{{form.nom_de_la_prison.label}} {{form.nom_de_la_prison}}</div>
+                        <div>{{form.capacite.label}} {{form.capacite}}</div>
+                        </div>
+                        <div class="col">
+                            <div>{{form.territoire.label}} {{form.territoire}}</div>
+                        <div>{{form.directeur.label}} {{form.directeur}}</div>
+                        </div>
+                        <input type="submit" class="btn btn-warning mt-3 " value="AJOUTER"><br><hr>
+                    </form>
+            </div> 
+            <div class="row-md-8">
+                <div class="container">
+                    <h4 class="text-center alert alert alert-warning text-dark opacity-70">LISTE DE PRISONS ENREGISTREES</h4>
+                    {% if LPS  %}
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">NUMERO</th>
+                                <th scope="col">NOM</th>
+                                <th scope="col">CAPACITE</th>
+                                <th scope="col">TERRITOIRE</th>
+                                <th scope="col">DIRECTEUR</th>
+                                <th scope="col">NOMBRE DE PRISONNIERS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for Prison in LPS %}
+                            <tr>
+                                <th scope="row">{{Prison.id}}</th>
+                                <th scope="row">{{Prison.nom_de_la_prison}}</th>
+                                <th scope="row">{{Prison.capacite}}</th>
+                                <th scope="row">{{Prison.territoire}}</th>
+                                <th scope="row">{{Prison.directeur}}</th>
+                                <th scope="row">{{Prison.nombre_prisonniers}}</th>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else  %}
+                    <h4 class="text-center alert alert alert-warning text-dark opacity-70">PAS D'ENREGISTRMENT</h4>
+                    {% endif  %}
+                </div> 
+            </div> 
+        </div>
+    </div>
+</div>
+</body><hr>
+
+
+
+{% endblock content %}
+
+
+</html>

@@ -1,0 +1,9 @@
+body{
+    background-image: url('../img/9.jpeg');
+    background-color: rgb(255, 255, 255);
+
+    /* METTRE L'IMAGE EN PLEIN ECRAN */
+    background-size: cover;
+    background-position: none;
+    background-repeat: no-repeat;
+}

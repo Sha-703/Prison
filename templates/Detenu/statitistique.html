@@ -1,0 +1,64 @@
+{% extends 'Detenu/base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistiques des Prisonniers</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    {% block content %}
+    <div class="container">
+        <h1 class="text-center">Statistiques des Prisonniers</h1>
+        <button onclick="window.print()" class="btn btn-primary">Imprimer</button>
+        {% for prison_stats in prisons %}
+        <h2 class="text-center mt-4">{{ prison_stats.prison.nom_de_la_prison }}</h2>
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr>
+                    <th>Statistique</th>
+                    <th>Valeur</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Total de Prisonniers</td>
+                    <td>{{ prison_stats.total_prisonniers }}</td>
+                </tr>
+                <tr>
+                    <td>Prisonniers Toujours Incarcérés</td>
+                    <td>{{ prison_stats.prisonniers_incarceres }}</td>
+                </tr>
+                <tr>
+                    <td>Prisonniers Libérés</td>
+                    <td>{{ prison_stats.prisonniers_libres }}</td>
+                </tr>
+                <tr>
+                    <td>Hommes</td>
+                    <td>{{ prison_stats.hommes }}</td>
+                </tr>
+                <tr>
+                    <td>Femmes</td>
+                    <td>{{ prison_stats.femmes }}</td>
+                </tr>
+                <tr>
+                    <td>Peine à Mort</td>
+                    <td>{{ prison_stats.peine_a_mort }}</td>
+                </tr>
+                <tr>
+                    <td>Peine Capitale</td>
+                    <td>{{ prison_stats.peine_capitale }}</td>
+                </tr>
+                <tr>
+                    <td>Travaux Forcés</td>
+                    <td>{{ prison_stats.travaux_forces }}</td>
+                </tr>
+            </tbody>
+        </table>
+        {% endfor %}
+    </div>
+    {% endblock content %}
+</body>
+</html>

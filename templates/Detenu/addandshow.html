@@ -1,0 +1,207 @@
+{% extends 'Detenu/base.html' %}
+<html lang="fr">
+    {% load static %}
+    {% load custom_filters %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRISONNIER</title>
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script>
+        $(document).ready(function(){ 
+            $('.datepicker').datepicker({
+                format: 'yyyy-mm-dd', 
+                autoclose: true, 
+                todayHighlight: true
+            });
+        });
+    </script>
+</head>
+
+{% block content %}
+
+<!-- DICTIONNAIRE
+mx-auto : CENTER LES ELEMENTS
+text-light : METTRE LA COULEUR DU TEXTE EN BLANC
+text-uppercase : METTRE LES TEXTES EN MAJUSCULE
+col-sm-6 : 
+text-center : CENTRER LE TEXTE
+btn btn-success : UN BOUTON DE VALIDATION AVEC COULEUR VERTE
+
+-->
+
+<link rel="stylesheet" href="{% static 'css/stylePrisonnier.css' %}">
+
+
+    <div class="container">
+        <div class="col mx-auto">
+            <div class="row align-items-center">
+                <!-- <a class="col btn btn-success bg-primary m-3" href="{% url 'Ajout_Grade'%}">AJOUTER UN GRADE</a> -->
+                <a class="col btn btn-success bg-primary m-3" href="{% url 'listDetenu'%}">list detenu</a>
+                
+                <form action="{% url 'chercheDetenu' %}" class="col form-inline" method="get">
+                    <div class="input-group">
+                        <input type="search" method="get" class="form-control rounded" placeholder="Search" aria-label="Search" name="query" aria-describedby="search-addon" />
+                         <button type="submit" class="btn btn-outline-primary" data-mdb-ripple-init>search</button>
+                    </div>
+                    {% if error_message %}
+                        <div class="alert alert-danger">{{ error_message }}</div>
+                    {% endif %}
+                </form>
+           
+            </div>
+            <div class="row-sm-4 row mx-auto">
+                <h4 class=" text-center alert alert alert-warning text-dark opacity-70">AJOUTER UN NOUVEAU PRISONNIER</h4>
+                <form class=" row text-uppercase  mx-auto text-light" action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="col">
+                        <div class="row">
+                            {{detenu.nom.label}}
+                            {{detenu.nom}}
+                        </div>
+                        <div class="row">
+                            {{detenu.date_de_naissance.label}}
+                            {{detenu.date_de_naissance|add_class:"form-control"}}
+                        </div>
+                        <div class="row">
+                            {{detenu.date_entree.label}}
+                            {{detenu.date_entree|add_class:"form-control"}}
+                        </div>
+                        <div class="row">
+                            {{detenu.cellule.label}}
+                            {{detenu.cellule}}
+                        </div>
+                    </div>
+                    <div class="col mx-1">
+                        <div class="row">
+                            {{detenu.postnom.label}}
+                            {{detenu.postnom}}
+                        </div>
+                        <div class="row">
+                            {{detenu.photo_Droit.label}}
+                            {{detenu.photo_Droit}}
+                        </div>
+                        <div class="row">
+                            {{detenu.photo_Gauche.label}}
+                            {{detenu.photo_Gauche}}
+                        </div>
+                        <div class="row">
+                            {{detenu.lieu_de_naissance.label}}
+                            {{detenu.lieu_de_naissance}}
+                        </div>
+                        <div class="row">       
+                            
+                            {{detenu.prison_incarceree.label}}
+                            {{detenu.prison_incarceree}}
+                        </div>
+                        <div class="row">
+                            {{detenu.date_sortie.label}}
+                            {{detenu.date_sortie|add_class:"form-control"}}
+                        </div>
+                        <div class="row">
+                            {{detenu.dossier.label}}
+                            {{detenu.dossier}}
+                        </div>
+                
+                       
+                    </div>
+                    <div class="col">
+                        <div class="row">
+                            {{detenu.prenom.label}}
+                            {{detenu.prenom}}
+                        </div>
+                        <div class="row">
+                            {{detenu.peine.label}}
+                            {{detenu.peine}}
+                        </div>
+
+                        <div class="row">
+                            {{detenu.motif.label}}
+                            {{detenu.motif}}
+                        </div>
+                        <div class="row">
+                            {{detenu.profil.label}}
+                            {{detenu.profil}}
+                        </div>
+                      
+                        
+                    </div>
+                    <div class="col mx-1">
+                        <div class="row">
+                            {{detenu.sexe.label}}
+                            {{detenu.sexe}}
+                        </div>
+                        <div class="row">
+                            {{detenu.matricule.label}}
+                            {{detenu.matricule}}
+                        </div>
+                        <div class="row">
+                            {{detenu.condamne_par.label}}
+                            {{detenu.condamne_par}}
+                        </div>
+                        <div class="row">    
+                            <input type="submit" class="btn btn-success bg-warning mt-4" style="width: 18rem;" value="AJOUTER">
+                        </div>                    
+                    </div>
+
+                </form>              
+            </div><br>
+            
+            <div class="row-sm-8 mx-auto">
+                <h4 class="text-center alert alert alert-warning opacity-70 text-dark">LISTE DE PRISONNIERS ENREGISTRES</h4>
+                {% if LDET  %}
+                <table class="col table table-hover text-right">
+    
+                <!-- L'EN-TETE DU TABLEAU, OU EST INSCRIT LE TITRE DU TABLEAU -->
+                <thead class="">
+                    <tr class="">
+                        <th scope="col">MATRI</th>
+                        <th scope="col">NOM</th>
+                        <th scope="col">POSTNOM</th>
+                        <th scope="col">PRENOM</th>
+                        <th scope="col">MOTIF</th>
+                        <th scope="col">PRISON</th>
+                        <th scope="col">CELLULE</th>
+                        <th scope="col">DUREE</th>
+                    </tr>
+                </thead>
+                <!-- LE CORPS DU TABLEAU OU EST INSCRIT LES ELEMENTS DE LA BASE -->
+                <tbody class="">
+                    {% for Detenu in LDET %}
+                    <tr class="inline">
+                        <th scope="">{{Detenu.matricule}}</th>
+                        <th scope=""><a href="{% url 'detenuInfo' Detenu.id %}">{{Detenu.nom}}</a></th>
+                        <th scope="">{{Detenu.postnom}}</th>
+                        <th scope="">{{Detenu.prenom}}</th>
+                        <th scope="">{{Detenu.motif}}</th>
+                        <th scope="">{{Detenu.prison_incarceree}}</th>
+                        <th scope="">{{Detenu.cellule}} </th>
+                        <th scope="">{{Detenu.incarceration_duration}}</th>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+                {% else  %}
+                <h4 class="text-center alert alert-warning opacity-70 text-dark">PAS D'ENREGISTRMENT</h4>
+                {% endif  %}
+    
+            </div>
+        </div>
+        <hr>
+      
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    
+    </div>
+
+{% endblock content %}

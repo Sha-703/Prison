@@ -1,0 +1,14 @@
+body{
+    background-image: url('../img/6.jpeg');
+    background-color: rgb(255, 255, 255);
+
+    /* METTRE L'IMAGE EN PLEIN ECRAN */
+    background-size: 100%;
+    background-position: none;
+    background-repeat: no-repeat;
+}
+
+/* .image{
+    max-height: 10rem;
+    max-width: 10rem;
+} */

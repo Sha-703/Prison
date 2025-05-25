@@ -1,0 +1,46 @@
+{% extends 'Detenu/base.html' %}
+<html lang="fr">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RECHERCHE</title>
+</head>
+    
+
+{% block content %}
+<body>
+    
+    <!-- {% if det %}
+        {% for Detenu in det %}
+            {{Detenu.nom}}
+        {% endfor %}
+    {% endif %} -->
+    <body>
+        {% if det %}
+                {% for Detenu in det %}
+        <div class="card m-3 mx-auto" style="max-width:20rem; max-height: 50rem;">
+            <h3 class="m-3 mx-auto">LISTE DE RECHERCHE</h3>
+            <div class="">
+                <img src="{{Detenu.profil.url}}" style="max-width: 20rem; max-height: 25rem;"  class="card-img-top" alt="Sunset Over the Sea"/>
+            </div>
+            <div class="row">
+                
+                <div class="card-body">
+                    <h5 class="card-title"><strong> {{Detenu.nom}}  {{Detenu.postnom}}  {{Detenu.prenom}} ({{Detenu.sexe}})</strong></h5>
+                    <p class="text-right text-j"> Detenu N°: <strong>{{Detenu.matricule}}</strong>  <br> Né(é) le <strong>{{Detenu.date_de_naissance}}</strong> à <strong>{{Detenu.lieu_de_naissance}}</strong> <br> Est incarcéré(e) dans la prison de <strong>{{Detenu.prison_incarceree}}</strong> <br> cellule : <strong>{{Detenu.cellule}}</strong> <br> Pour cause de : <strong>{{Detenu.motif}}</strong> <br> Dépuis le <strong>{{Detenu.date_entree}}</strong> et sera mis en liberté le <strong>{{Detenu.date_sortie}}</strong> <br> Condamné(é) par : <strong>{{Detenu.condamne_par}}</strong> <br> Pour une durée de : <strong>{{Detenu.duree}}</strong> Jours</p> 
+                </div>
+                {% endfor %}
+    {% endif %}
+            </div>
+        </div><hr>
+    </body>
+    
+    
+    
+
+</body>
+
+
+
+{% endblock content %}

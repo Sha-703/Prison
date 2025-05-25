@@ -1,0 +1,86 @@
+
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>MANAGER PRISON</title>
+    <!-- MDB icon -->
+    <link rel="icon" href="img/Sans titre-1.png" type="image/x-icon" />
+    <!-- Font Awesome -->
+    <linkx
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <!-- Google Fonts Roboto -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
+    />
+    <!-- MDB -->
+    <link rel="stylesheet" href="{% static 'css/mdb.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'DETENUS/static/css/style.css'%}">
+  </head>
+<!-- MON ENTETE -->
+<header>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg bg-body">
+    <div class=" rox container-fluid">
+      <button
+        data-mdb-collapse-init
+        class="navbar-toggler"
+        type="button"
+        data-mdb-target="#navbarExample01"
+        aria-controls="navbarExample01"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="col-lg-7 collapse navbar-collapse mx-auto " id="navbarExample01">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-center mx-auto">
+          <li class="nav-item active">
+            <a class="nav-link btn btn-primary m-2" aria-current="page" href="{% url 'accueil' %}"><strong>ACCUEIL</strong></a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link btn btn-primary m-2" href="{% url 'Ajout_Prison'%}"><strong>PRISONS</strong></a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link btn btn-primary m-2" href="{% url 'Ajout' %}"><strong>DETENUS</strong></a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link btn btn-primary m-2" href="{% url 'logout' %}"><strong>DECONNEXION</strong></a>
+          </li>
+        </ul>
+      </div>   
+    </div>
+  </nav>
+</header>
+
+{% block content %}
+        
+{% endblock content%}
+
+<!-- Footer -->
+<footer class="text-center text-lg-start bg-body-tertiary text-muted">
+  <!-- Section: Social media -->
+  <section class=" ext-center p-4 d-flex justify-content-center justify-content-lg-between p-4 border-bottom" style="background-color: rgba(73, 253, 28, 0.05);">
+  </section>
+  <!-- Section: Social media -->
+  
+  <!-- Copyright -->
+  <div class="text-center p-4" style="background-color: rgba(73, 253, 28, 0.05);">
+    © 2025 Copyright:
+    <a class="text-reset fw-bold" href="">KONGO DIETO</a>
+  </div>
+  <!-- Copyright -->
+</footer>
+<!-- Footer -->
+
+
+</html>
+

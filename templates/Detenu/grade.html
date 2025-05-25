@@ -1,0 +1,53 @@
+{% extends 'Detenu/base.html' %}
+<html lang="fr">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRADE</title>
+</head>
+
+{% block content %}
+    
+<body>
+    <link rel="stylesheet" href="{% static 'css/stylePrison.css'%}">
+<div class="row">
+    <div class="col-3 m-4">
+        <h4 class="text-center alert alert alert-success opacity-70">AJOUTER UN GRADE</h4>
+        <form action="" method="POST" class=" row text-uppercase  mx-auto " >
+                {% csrf_token %} 
+                <div class="">{{grade.libelle_Grade.label}}</div>
+                <div class="">{{grade.libelle_Grade}}</div>
+                <input type="submit" class="btn btn-success mt-3" value="AJOUTER">
+        </form>
+    </div>
+
+    <div class="col-sm-8 m-4">
+        <h4 class="text-center alert alert alert-success opacity-70">LISTE DE GRADES ENREGISTRES</h4>
+    {% if LEG %}    
+        <table class="mx-auto table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">IDENTIFIANT</th>
+                    <th scope="col">INTITULE</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for Grade in LEG %}
+                <tr>
+                    <th scope="row">{{Grade.id}}</th>
+                    <th scope="row">{{Grade.libelle_Grade}}</th>
+                </tr>
+            {% endfor%}
+            </tbody>
+        </table>
+    {% else  %}
+        <h4 class="text-center alert alert alert-warning opacity-70">PAS D'ENREGISTRMENT</h4>
+    {% endif %}
+    </div>
+</div>
+</body>
+
+{% endblock content %}
+
+</html>

@@ -1,0 +1,132 @@
+{% extends 'Detenu/base.html' %}
+{% load static %}
+{% block content %}
+
+
+ <!--AFFICHER LES DONNEES DE LA BASE DE DONNEES D'UN PRISONNIER -->
+<!-- 
+ <div class="row">
+
+CARD -->
+    
+<body>
+    <hr>
+    <div class="container">
+        <div class="row">
+            <div class="card mx-auto col-lg-12" style="max-width:55rem; max-height: 50rem;">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="card-body row">
+                            <div class="col-md-4">
+                                <div class="">
+                                    <img src="{{Pri.profil.url}}" style="width: 16rem; height: 19rem;"  class="card-img-top" alt="Sunset Over the Sea"/>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                            <h5 class="card-title"><strong>Detenu N°: <strong>{{ Pri.matricule }}</strong>  <br> {{Pri.nom}}  {{Pri.postnom}}  {{Pri.prenom}} ({{Pri.sexe}})</strong></h5>
+            
+                            <div class="">
+                                <p class="text-right text-j"> 
+                                    Né(é) le <strong>{{ Pri.date_de_naissance }}</strong> à <strong>{{ Pri.lieu_de_naissance }}</strong> <br> 
+                                    Est incarcéré(e) dans la prison de <strong>{{ Pri.prison_incarceree }}</strong> <br> 
+                                    cellule : <strong>{{ Pri.cellule }}</strong> <br> 
+                                    Pour cause de : <strong>{{ Pri.motif }}</strong> <br> 
+                                    Dépuis le <strong>{{ Pri.date_entree }}</strong> et sera mis en liberté le <strong>{{ Pri.date_sortie }}</strong> <br> 
+                                    Condamné(é) par : <strong>{{ Pri.condamne_par }}</strong> <br> 
+                                    Pour une durée : <strong>{{ Pri.duree }}</strong><br>
+                                    Staut: <strong>{{ Pri.est_libere_status }}</strong><br>
+                                </p>
+                                <a href="{% url 'transfert_detenu' Pri.id %}" class="btn btn-warning">Transférer</a>
+                                <button onclick="printDetenuInfo()" class="btn btn-primary">Imprimer</button>
+                                <a href="{% url 'ajouter_dossier' Pri.id %}" class="btn btn-success">Ajouter Dossier</a>
+                            </div>
+                            </div>
+            
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="col-md-2 ">
+                <h2>ANNEXE</h2>
+                {% for dossier in Pri.dossiers.all %}
+                    <a href="{{ dossier.fichier.url }}" target="_blank">{{ dossier.description }}</a><br>
+                {% endfor %}
+                
+            </div>
+        </div>
+    </div>
+    </div><hr>
+
+    <!-- Modal -->
+    <div class="modal fade" id="addDossierModal" tabindex="-1" role="dialog" aria-labelledby="addDossierModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addDossierModalLabel">Ajouter un nouveau dossier</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'ajouter_dossier' Pri.id %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <input type="text" class="form-control" id="description" name="description">
+                        </div>
+                        <div class="form-group">
+                            <label for="fichier">Fichier</label>
+                            <input type="file" class="form-control" id="fichier" name="fichier">
+                        </div>
+                        <button type="submit" class="btn btn-primary" >Ajouter</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="printableArea" style="display:none;">
+        <div class="card-body row">
+            <div class="col-md-4">
+                <div class="">
+                    <img src="{{Pri.profil.url}}" style="width: 16rem; height: 19rem;"  class="card-img-top" alt="Sunset Over the Sea"/>
+                </div>
+            </div>
+            <div class="col-md-8">
+                
+                <h5 class="card-title"><strong>Detenu N°: <strong>{{ Pri.matricule }}</strong>  <br> {{Pri.nom}}  {{Pri.postnom}}  {{Pri.prenom}} ({{Pri.sexe}})</strong></h5>
+                <div class="">
+                    <p class="text-right text-j"> 
+                        Né(é) le <strong>{{ Pri.date_de_naissance }}</strong> à <strong>{{ Pri.lieu_de_naissance }}</strong> <br> 
+                        Est incarcéré(e) dans la prison de <strong>{{ Pri.prison_incarceree }}</strong> <br> 
+                        cellule : <strong>{{ Pri.cellule }}</strong> <br> 
+                        Pour cause de : <strong>{{ Pri.motif }}</strong> <br> 
+                        Dépuis le <strong>{{ Pri.date_entree }}</strong> et sera mis en liberté le <strong>{{ Pri.date_sortie }}</strong> <br> 
+                        Condamné(é) par : <strong>{{ Pri.condamne_par }}</strong> <br> 
+                        Pour une durée : <strong>{{ Pri.duree }}</strong><br>
+                        <strong>{{ Pri.est_libere_status }}</strong><br>
+                        {% if Pri.est_libere %}
+                            <strong>Le détenu a été libéré.</strong>
+                        {% else %}
+                            <strong>Le détenu est toujours incarcéré.</strong>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT POUR IMPRIMER LA PAGE DETENU INFO -->
+    <script>
+        function printDetenuInfo() {
+            var printContents = document.getElementById('printableArea').innerHTML;
+            var originalContents = document.body.innerHTML;
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+        }
+    </script>
+</body>
+
+{% endblock content %}

@@ -1,0 +1,69 @@
+{% extends 'Detenu/base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- DICTIONNAIRE
+ml-1: ESPACE A GAUCHE 
+mt-1: ESPACE DU HAUT
+-->
+
+<body>
+
+    
+    <!-- CREATION D'UN CARD -->
+{% if LDET  %}
+
+<div class="row">
+    {% for Detenu in LDET %}
+
+<!-- CARD -->
+    <div class="card m-2" style="max-width: 14rem; max-height: 25rem;">
+        <div class="mt-1 p-1">
+            <img src="{{ Detenu.profil.url }}" style="width: 12rem; height: 10rem;"  class="card-img-top" alt="Sunset Over the Sea"/>
+        </div>
+        <div class="card-body">
+            <label class="card-title" for=""><strong> {{Detenu.nom}}  {{Detenu.postnom}}  {{Detenu.prenom}} </strong></label>
+            <a href="{% url 'detenuInfo' Detenu.id %}" class="btn btn-primary">INFORMATIONS</a> 
+        </div>
+      </div>
+{% endfor %}
+</div>
+
+{% else  %}
+<h4 class="text-center alert alert alert-success">PAS D'ENREGISTRMENT</h4>
+{% endif  %}
+<!-- CARDE  -->
+
+
+</body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+{% endblock content %}

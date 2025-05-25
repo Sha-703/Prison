@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>MANAGER PRISON</title>
+    <!-- MDB icon -->
+    <link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon" />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <!-- Google Fonts Roboto -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
+    />
+    <!-- MDB -->
+    <link rel="stylesheet" href="{% static 'css/mdb.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'DETENUS/static/css/style.css'%}">
+<!-- MON ENTETE -->
+<header>
+<body>
+  
+  <div class="container">
+    <div class="col-md-8 mt-3 mx-auto">
+      <div class="text-center">
+        <h1>MANAGER_PRISON</h1>
+        <img src="{% static 'img/Sans titre-1.png'%}" alt="" style="background-size: cover; max-width: 45%; max-height: 20%; ">
+
+      </div><hr>
+      <form action="" method="post">
+        <div class="card">
+          <div class="card-header text-center"><H3>PAGE DE CONNEXION</H3></div>
+          <div class="card-body">
+            {% csrf_token %}
+            {% if messages %}
+              <div class="alert alert-danger">
+                {% for message in messages %}
+                  <p>{{ message }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
+            <input type="text" placeholder="Nom Utilisateur" name="userame" class="form-control mb-2" id="userame">
+            <input type="password" placeholder="Mot de passe" name="password" class="form-control" id="password">
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-primary btn-block">Se connecter</button>
+          </div>
+        </div>
+        
+             
+      </form>
+    </div>
+  </div>  
+
+
+</body>
+</html>

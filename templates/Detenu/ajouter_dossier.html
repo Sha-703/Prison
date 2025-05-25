@@ -1,0 +1,11 @@
+{% extends 'Detenu/base.html' %}
+{% block content %}
+<div class="container mt-3">
+    <h2>Ajouter un nouveau dossier pour {{ detenu.nom }} {{ detenu.postnom }}</h2>
+    <form action="{% url 'ajouter_dossier' detenu.id %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Ajouter</button>
+    </form>
+</div>
+{% endblock content %}

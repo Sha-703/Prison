@@ -1,0 +1,26 @@
+{% extends 'Detenu/base.html' %}
+<html lang="fr">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RECHERCHE</title>
+</head>
+    
+
+{% block content %}
+<body>
+    <h3>LISTE DE RECHERCHE</h3>
+    <!-- {% block search_url %}{% url 'cherchePrison' %}{% endblock %} -->
+     
+    {% if pri %}
+        {% for Prison in pri %}
+            {{Prison.nom_de_la_prison}}
+        {% endfor %}
+    {% endif %}
+
+</body>
+
+
+
+{% endblock content %}

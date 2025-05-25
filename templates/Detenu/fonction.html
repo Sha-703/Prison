@@ -1,0 +1,55 @@
+{% extends 'Detenu/base.html' %}
+<html lang="fr">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRADE</title>
+</head>
+    
+
+{% block content %}
+
+
+<link rel="stylesheet" href="{% static 'Detenus/css/stylePrison.css'%}">
+<div class="row">
+    <div class="col-3 m-4">
+        <h4 class="text-center alert alert alert-success">AJOUTER UNE FONCTION </h4>
+        <form action="" method="POST" class=" row text-uppercase  mx-auto " >
+                {% csrf_token %} 
+                <div>{{fonction.libelle_Fonction.label}} {{fonction.libelle_Fonction}}</div>
+                <input type="submit" class="btn btn-success mt-3" value="AJOUTER">
+        </form>
+    </div>
+
+
+    <div class="col-sm-8 m-4">
+        <h4 class="text-center alert alert alert-success">LISTE DE FONCTIONS ENREGISTREES</h4>
+    {% if LEF %}    
+        <table class="mx-auto table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">IDENTIFIANT</th>
+                    <th scope="col">INTITULE</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for Fonction in LEF %}
+                <tr>
+                    <th scope="row">{{Fonction.id}}</th>
+                    <th scope="row">{{Fonction.libelle_Fonction}}</th>
+                </tr>
+            {% endfor%}
+            </tbody>
+        </table>
+    {% else  %}
+        <h4 class="text-center alert alert alert-warning">PAS D'ENREGISTRMENT</h4>
+    {% endif %}
+    </div>
+     <!-- <div class="col"></div> -->
+</div>
+
+
+
+
+{% endblock content %}

@@ -1,0 +1,10 @@
+{% extends 'Detenu/base.html' %}
+
+{% block content %}
+  <h2>Transfert de {{ detenu.nom }} {{ detenu.postnom }} {{ detenu.prenom }}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Transférer</button>
+  </form>
+{% endblock %}
