@@ -27,7 +27,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'default-insecure-key')
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'prison.onrender.com';
+    'prison.onrender.com',
 ]
 
 
