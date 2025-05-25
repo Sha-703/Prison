@@ -11,7 +11,7 @@
     <!-- MDB icon -->
     <link rel="icon" href="img/Sans titre-1.png" type="image/x-icon" />
     <!-- Font Awesome -->
-    <linkx
+    <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
@@ -20,29 +20,44 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
     />
-    <!-- CSS MDB/Bootstrap -->
-    <link rel="stylesheet" href="{% static 'css/mdb.min.css' %}">
-    <!-- ou Bootstrap si utilisé -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <!-- MDB -->
+    <link rel="stylesheet" href="{% static 'css/mdb.min.css' %}" />
     <link rel="stylesheet" href="{% static 'DETENUS/static/css/style.css'%}">
   </head>
 <!-- MON ENTETE -->
 <header>
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Logo</a>
-  <button class="navbar-toggler" type="button" data-mdb-collapse-init data-mdb-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Accueil</a>
-      </li>
-      <!-- autres liens -->
-    </ul>
-  </div>
-</nav>
+  <nav class="navbar navbar-expand-lg bg-body">
+    <div class=" rox container-fluid">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-mdb-toggle="collapse"
+        data-mdb-target="#navbarExample01"
+        aria-controls="navbarExample01"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="col-lg-7 collapse navbar-collapse mx-auto " id="navbarExample01">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-center mx-auto">
+          <li class="nav-item active">
+            <a class="nav-link btn btn-primary m-2" aria-current="page" href="{% url 'accueil' %}"><strong>ACCUEIL</strong></a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link btn btn-primary m-2" href="{% url 'Ajout_Prison'%}"><strong>PRISONS</strong></a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link btn btn-primary m-2" href="{% url 'Ajout' %}"><strong>DETENUS</strong></a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link btn btn-primary m-2" href="{% url 'logout' %}"><strong>DECONNEXION</strong></a>
+          </li>
+        </ul>
+      </div>   
+    </div>
+  </nav>
 </header>
 
 {% block content %}
@@ -65,11 +80,11 @@
 </footer>
 <!-- Footer -->
 
-<!-- JS MDB/Bootstrap -->
+
+<!-- Ajoute ces scripts juste avant la fermeture de </body> ou à la fin du fichier -->
 <script type="text/javascript" src="{% static 'js/mdb.umd.min.js' %}"></script>
-<!-- ou Bootstrap si utilisé -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Si tu utilises Bootstrap pur, ajoute aussi : -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
 
 </html>
 
