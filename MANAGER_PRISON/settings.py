@@ -30,6 +30,10 @@ ALLOWED_HOSTS = [
     'prison.onrender.com',
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://prison.onrender.com',
+]
+
 
 # Application definition
 
