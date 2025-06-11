@@ -19,6 +19,18 @@
         {% endfor %}
     {% endif %}
 
+    <div class="row align-items-center mb-4">
+        <a class="col btn btn-success bg-primary m-2" href="{% url 'ajout_agent'%}">AJOUTER AGENT</a>
+        <form action="{% url 'cherchePrison' %}" class="col form-inline" method="get">
+            <div class="input-group">
+                <input type="search" class="form-control rounded" placeholder="Recherche prison..." aria-label="Search" name="query" aria-describedby="search-addon" />
+                <button type="submit" class="btn btn-outline-primary">Rechercher</button>
+            </div>
+        </form>
+        <a class="col btn btn-info m-2" href="{% url 'list_prisons' %}">LISTE DES PRISONS</a>
+        <a class="col btn btn-secondary m-2" href="{% url 'Ajout_Grade' %}">AJOUTER UN GRADE</a>
+    </div>
+
 </body>
 
 

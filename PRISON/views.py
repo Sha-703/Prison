@@ -4,6 +4,8 @@ from .models import *
 from DETENUS.models import Detenu  # Assurez-vous que le modèle Detenu est importé correctement
 import logging
 from django.db.models import Count, Q
+from django.contrib.auth.models import Group
+from PERS_AUTH.models import Utilisateur
 
 LOGGING = {
     'version': 1,
@@ -28,23 +30,28 @@ LOGGING = {
 logger = logging.getLogger(__name__)
 
 def Ajout_Prison(request):
+    user = request.user
+    is_consultant = user.is_authenticated and user.groups.filter(name='Consultants').exists()
     error_message = None
     search_error_message = None
+    territoire_id = request.session.get('territoire_id')
     if request.method == 'POST':
         EP = Enregistrement_Prison(request.POST)
-        territoire_id = request.session.get('territoire_id')
         if EP.is_valid():
             prison = EP.save(commit=False)
-            if prison.territoire.id != territoire_id:
+            if not is_consultant and prison.territoire.id != territoire_id:
                 error_message = "Vous ne pouvez qu'enregistrer une prison dans votre site"
             else:
                 prison.save()
                 return redirect('Ajout_Prison')
     else:
         EP = Enregistrement_Prison()
-    territoire_id = request.session.get('territoire_id')
-    LPS = Prison.objects.filter(territoire_id=territoire_id)
-    prisons = Prison.objects.filter(territoire_id=territoire_id)
+    if is_consultant:
+        LPS = Prison.objects.all()
+        prisons = Prison.objects.all()
+    else:
+        LPS = Prison.objects.filter(territoire_id=territoire_id)
+        prisons = Prison.objects.filter(territoire_id=territoire_id)
     return render(request, 'Detenu/prison.html', {'form': EP, 'LPS': LPS, 'prisons': prisons, 'error_message': error_message, 'search_error_message': search_error_message}) 
 
 def Ajout_Grade(request):
@@ -74,43 +81,46 @@ def ajout_agent(request):
 from django.http import Http404
 
 def cherchePrison(request):
+    user = request.user
+    is_consultant = user.is_authenticated and user.groups.filter(name='Consultants').exists()
     query = request.GET.get('query')
     if not query:
         raise Http404("Aucune requête de recherche fournie.")
-    
-    pri = Prison.objects.filter(nom_de_la_prison__icontains=query)
+    if is_consultant:
+        pri = Prison.objects.filter(nom_de_la_prison__icontains=query)
+    else:
+        territoire_id = request.session.get('territoire_id')
+        pri = Prison.objects.filter(nom_de_la_prison__icontains=query, territoire_id=territoire_id)
     if not pri.exists():
         raise Http404("Le nom saisi n'existe pas.")
-    
     return render(request, 'Detenu/recherchePrison.html', {'pri': pri})
 
 def statistiques(request):
-    territoire_id = request.session.get('territoire_id')
-    prisons = Prison.objects.filter(territoire_id=territoire_id).annotate(
-        total_prisonniers=Count('detenu'),
-        prisonniers_incarceres=Count('detenu', filter=Q(detenu__est_libere=False)),
-        prisonniers_libres=Count('detenu', filter=Q(detenu__est_libere=True)),
-    )
-    
+    # Récupérer l'utilisateur connecté depuis la session
+    nom_utilisateur = request.session.get('nom_utilisateur')
+    if not nom_utilisateur:
+        return redirect('utilisateur')
+    utilisateur = Utilisateur.objects.get(nom_utilisateur=nom_utilisateur)
+    if utilisateur.is_superuser:
+        prisons = Prison.objects.all().annotate(
+            total_prisonniers=Count('detenu'),
+            prisonniers_incarceres=Count('detenu', filter=Q(detenu__est_libere=False)),
+            prisonniers_libres=Count('detenu', filter=Q(detenu__est_libere=True)),
+        )
+    else:
+        territoire_id = utilisateur.territoire.id
+        prisons = Prison.objects.filter(territoire_id=territoire_id).annotate(
+            total_prisonniers=Count('detenu'),
+            prisonniers_incarceres=Count('detenu', filter=Q(detenu__est_libere=False)),
+            prisonniers_libres=Count('detenu', filter=Q(detenu__est_libere=True)),
+        )
     prisons_stats = []
-    
     for prison in prisons:
         hommes = Detenu.objects.filter(prison_incarceree=prison, sexe='M').count()
         femmes = Detenu.objects.filter(prison_incarceree=prison, sexe='F').count()
         peine_a_mort = Detenu.objects.filter(prison_incarceree=prison, peine='A MORT').count()
         peine_capitale = Detenu.objects.filter(prison_incarceree=prison, peine='CAPITALE').count()
         travaux_forces = Detenu.objects.filter(prison_incarceree=prison, peine='TRAVAUX FORCES').count()
-        
-        logger.debug('Prison: %s', prison.nom_de_la_prison)
-        logger.debug('Total prisonniers: %s', prison.total_prisonniers)
-        logger.debug('Prisonniers incarcérés: %s', prison.prisonniers_incarceres)
-        logger.debug('Prisonniers libres: %s', prison.prisonniers_libres)
-        logger.debug('Hommes: %s', hommes)
-        logger.debug('Femmes: %s', femmes)
-        logger.debug('Peine à mort: %s', peine_a_mort)
-        logger.debug('Peine capitale: %s', peine_capitale)
-        logger.debug('Travaux forcés: %s', travaux_forces)
-        
         prisons_stats.append({
             'prison': prison,
             'total_prisonniers': prison.total_prisonniers,
@@ -122,7 +132,17 @@ def statistiques(request):
             'peine_capitale': peine_capitale,
             'travaux_forces': travaux_forces
         })
-    
-    return render(request, 'Detenu/statitistique.html', {
-        'prisons': prisons_stats
-    })
+    return render(request, 'Detenu/statitistique.html', {'prisons': prisons_stats, 'utilisateur': utilisateur})
+
+def list_prisons(request):
+    # Récupérer l'utilisateur connecté depuis la session
+    nom_utilisateur = request.session.get('nom_utilisateur')
+    if not nom_utilisateur:
+        return redirect('utilisateur')
+    utilisateur = Utilisateur.objects.get(nom_utilisateur=nom_utilisateur)
+    if utilisateur.is_superuser:
+        prisons = Prison.objects.all()
+    else:
+        territoire_id = utilisateur.territoire.id
+        prisons = Prison.objects.filter(territoire_id=territoire_id)
+    return render(request, 'Detenu/listPrison.html', {'prisons': prisons, 'utilisateur': utilisateur})

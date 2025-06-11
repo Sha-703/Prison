@@ -17,18 +17,18 @@
     <div class="col mx-auto"> 
         <div class="row">
             <div class="row align-items-center">
-                <!-- <a class="col btn btn-success bg-primary m-3" href="{% url 'Ajout_Grade'%}">AJOUTER UN GRADE</a> -->
                 <a class="col btn btn-success bg-primary m-3" href="{% url 'ajout_agent'%}">AJOUTER AGENT</a>
                 <form action="{% url 'cherchePrison' %}" class="col form-inline" method="get">
                     <div class="input-group">
-                        <input type="search" method="get" class="form-control rounded" placeholder="Search" aria-label="Search" name="query" aria-describedby="search-addon" />
-                        <button type="submit" class="btn btn-outline-primary" data-mdb-ripple-init>search</button>
+                        <input type="search" method="get" class="form-control rounded" placeholder="Recherche prison..." aria-label="Search" name="query" aria-describedby="search-addon" />
+                        <button type="submit" class="btn btn-outline-primary" data-mdb-ripple-init>Rechercher</button>
                     </div>
                     {% if search_error_message %}
                         <div class="alert alert-danger">{{ search_error_message }}</div>
                     {% endif %}
                 </form>
-           
+                <a class="col btn btn-info m-3" href="{% url 'list_prisons' %}">LISTE DES PRISONS</a>
+                <a class="col btn btn-secondary m-3" href="{% url 'Ajout_Grade' %}">AJOUTER UN GRADE</a>
             </div>
             <div class="row-md-4 mx-auto" style="width: 35rem;">
                 <h4 class="text-center alert alert alert-warning text-dark opacity-70">AJOUTER UNE PRISON</h4>

@@ -13,6 +13,17 @@
     <div class="container">
         <h1 class="text-center">Statistiques des Prisonniers</h1>
         <button onclick="window.print()" class="btn btn-primary">Imprimer</button>
+        <div class="row align-items-center mb-4">
+            <a class="col btn btn-success bg-primary m-2" href="{% url 'ajout_agent'%}">AJOUTER AGENT</a>
+            <form action="{% url 'cherchePrison' %}" class="col form-inline" method="get">
+                <div class="input-group">
+                    <input type="search" class="form-control rounded" placeholder="Recherche prison..." aria-label="Search" name="query" aria-describedby="search-addon" />
+                    <button type="submit" class="btn btn-outline-primary">Rechercher</button>
+                </div>
+            </form>
+            <a class="col btn btn-info m-2" href="{% url 'list_prisons' %}">LISTE DES PRISONS</a>
+            <a class="col btn btn-secondary m-2" href="{% url 'Ajout_Grade' %}">AJOUTER UN GRADE</a>
+        </div>
         {% for prison_stats in prisons %}
         <h2 class="text-center mt-4">{{ prison_stats.prison.nom_de_la_prison }}</h2>
         <table class="table table-striped mt-3">

@@ -2,9 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import Enregistrement_Detenu, TransfertForm, DossierForm
 from .models import Detenu, Transfert, Dossier
 from PRISON.models import Prison  # Importer uniquement les modèles nécessaires
+from PERS_AUTH.models import Utilisateur
 import logging
 from django import forms
 import json  # Ajouter l'importation de json pour le débogage
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
 
 class TransfertForm(forms.ModelForm):
     class Meta:
@@ -15,22 +18,32 @@ class TransfertForm(forms.ModelForm):
 # Create your views here.
 logger = logging.getLogger(__name__)
 def Ajout(request):
-    logger.debug('Received POST request')
+    user = request.user
+    is_consultant = user.is_authenticated and user.groups.filter(name='Consultants').exists()
     territoire_id = request.session.get('territoire_id')
-    DET = Enregistrement_Detenu(request.POST, request.FILES, territoire_id=territoire_id)
-    if DET.is_valid():
+    if request.method == 'POST':
+        DET = Enregistrement_Detenu(request.POST, request.FILES, territoire_id=territoire_id)
+        if DET.is_valid():
             DET.save()
-    logger.debug('Received GET request')
-    DET = Enregistrement_Detenu(territoire_id=territoire_id)
-    prisons = Prison.objects.filter(territoire_id=territoire_id)
-    LDET = Detenu.objects.filter(prison_incarceree__territoire_id=territoire_id)
+    else:
+        DET = Enregistrement_Detenu(territoire_id=territoire_id)
+    if is_consultant:
+        prisons = Prison.objects.all()
+        LDET = Detenu.objects.all()
+    else:
+        prisons = Prison.objects.filter(territoire_id=territoire_id)
+        LDET = Detenu.objects.filter(prison_incarceree__territoire_id=territoire_id)
     return render(request, 'Detenu/addandshow.html', {'detenu': DET, 'LDET': LDET, 'prisons': prisons})
 
 #RECUPERER LES DONNES DE LA BASE DE DONNEES POUR LES AFFICHER DANS LA PAGE LISTPRISONNIER.HTML
 
 def listDetenu(request):
-    territoire_id = request.session.get('territoire_id')
-    LDET = Detenu.objects.filter(prison_incarceree__territoire_id=territoire_id)
+    utilisateur = Utilisateur.objects.get(nom_utilisateur=request.session.get('nom_utilisateur'))
+    if utilisateur.is_superuser:
+        LDET = Detenu.objects.all()
+    else:
+        territoire_id = utilisateur.territoire.id
+        LDET = Detenu.objects.filter(prison_incarceree__territoire_id=territoire_id)
     return render(request, 'Detenu/listPrisonnier.html', {'LDET': LDET})
 
 #   RECUPERER UNIQUEMENT LE ID DE CHAQUE DETENU POUR L'AFFICHER SUR LA PAGE INFOPRISONNIER.HTML
@@ -40,15 +53,13 @@ def detenuInfo(request, id):
 
 # RECHERCHE DETENU
 def chercheDetenu(request):
+    utilisateur = Utilisateur.objects.get(nom_utilisateur=request.session.get('nom_utilisateur'))
     query = request.GET.get('query')
-    det = Detenu.objects.filter(nom__icontains=query)
-    if not det:
-        error_message = "Le nom saisi n'existe pas"
-        territoire_id = request.session.get('territoire_id')
-        DET = Enregistrement_Detenu(territoire_id=territoire_id)
-        prisons = Prison.objects.filter(territoire_id=territoire_id)
-        LDET = Detenu.objects.filter(prison_incarceree__territoire_id=territoire_id)
-        return render(request, 'Detenu/addandshow.html', {'detenu': DET, 'LDET': LDET, 'prisons': prisons, 'error_message': error_message})
+    if utilisateur.is_superuser:
+        det = Detenu.objects.filter(nom__icontains=query)
+    else:
+        territoire_id = utilisateur.territoire.id
+        det = Detenu.objects.filter(nom__icontains=query, prison_incarceree__territoire_id=territoire_id)
     return render(request, 'Detenu/rechercheDetenu.html', {'det': det})
 
 def transfert_detenu(request, detenu_id):
@@ -80,10 +91,13 @@ def ajouter_dossier(request, detenu_id):
         return render(request, 'Detenu/ajouter_dossier.html', {'form': form, 'detenu': detenu})
 
 def statistiques(request):
-    territoire_id = request.session.get('territoire_id')
-    prisons = Prison.objects.filter(territoire_id=territoire_id)
+    utilisateur = Utilisateur.objects.get(nom_utilisateur=request.session.get('nom_utilisateur'))
+    if utilisateur.is_superuser:
+        prisons = Prison.objects.all()
+    else:
+        territoire_id = utilisateur.territoire.id
+        prisons = Prison.objects.filter(territoire_id=territoire_id)
     prisons_stats = []
-    
     for prison in prisons:
         total_prisonniers = Detenu.objects.filter(prison_incarceree=prison).count()
         prisonniers_incarceres = Detenu.objects.filter(prison_incarceree=prison, est_libere=False).count()
@@ -93,7 +107,6 @@ def statistiques(request):
         peine_a_mort = Detenu.objects.filter(prison_incarceree=prison, peine='A MORT').count()
         peine_capitale = Detenu.objects.filter(prison_incarceree=prison, peine='CAPITALE').count()
         travaux_forces = Detenu.objects.filter(prison_incarceree=prison, peine='TRAVAUX FORCES').count()
-        
         prisons_stats.append({
             'prison': prison,
             'total_prisonniers': total_prisonniers,
@@ -105,7 +118,4 @@ def statistiques(request):
             'peine_capitale': peine_capitale,
             'travaux_forces': travaux_forces
         })
-    
-    return render(request, 'Detenu/statitistique.html', {
-        'prisons': prisons_stats
-    })
+    return render(request, 'Detenu/statitistique.html', {'prisons': prisons_stats})
